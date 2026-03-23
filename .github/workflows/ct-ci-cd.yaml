@@ -49,4 +49,13 @@ jobs:
           # Deploy api to Openshift with OAuth2 protection, Get OAuth2 token for integration test
           # Test api with OAuth2 authentication, Asleep kto-mlflow with dailyclean
           
-          
+          - name: Install dependencies
+  run: |
+    python -m pip install --upgrade pip
+    pip install uv
+    uv sync --group training --group dev
+
+
+    - name: Launch unit tests
+  run: |
+    uv run pytest tests/ci tests/training
