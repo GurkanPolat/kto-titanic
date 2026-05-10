@@ -16,10 +16,7 @@ from fastapi import FastAPI, Depends
 from titanic.api.auth import verify_token
 
 
-JAEGER_ENDPOINT = os.getenv(
-    "JAEGER_ENDPOINT",
-    "http://jaeger.kto-gthomas-dev.svc.cluster.local:4318/v1/traces"
-)
+JAEGER_ENDPOINT = os.getenv("JAEGER_ENDPOINT", "http://jaeger.kto-gthomas-dev.svc.cluster.local:4318/v1/traces")
 
 # TODO : Intégrer les configurations d'OTEL et instancier le tracer. Peut être fait plus tard si le cours
 # sur l'observabilité n'est pas encore donné
@@ -28,7 +25,6 @@ app = FastAPI()
 
 with open("./src/titanic/api/resources/model.pkl", "rb") as f:
     model = pickle.load(f)
-
 
 class Pclass(Enum):
     UPPER = 1
@@ -49,13 +45,7 @@ class Passenger:
     parch: int
 
     def to_dict(self) -> dict:
-        return {
-            "Pclass": self.pclass.value,
-            "Sex": self.sex.value,
-            "SibSp": self.sibSp,
-            "Parch": self.parch
-        }
-
+        return {"Pclass": self.pclass.value, "Sex": self.sex.value, "SibSp": self.sibSp, "Parch": self.parch}
 
 @app.get("/health")
 def health() -> dict:
@@ -64,19 +54,13 @@ def health() -> dict:
 
 # TODO : Ajouter les paramètres de la fonction (peut se faire en deux fois avec la sécurisation via oAuth2)
 @app.post("/infer")
-def infer(
-    passenger: Passenger,
-    token: str = Depends(verify_token("api:read"))
-) -> list:
+def infer(passenger: Passenger, token: str = Depends(verify_token("api:read"))) -> list:
 
     df_passenger = pd.DataFrame([passenger.to_dict()])
-    df_passenger["Sex"] = pd.Categorical(
-        df_passenger["Sex"],
-        categories=[Sex.FEMALE.value, Sex.MALE.value]
-    )
-
+    df_passenger["Sex"] = pd.Categorical(df_passenger["Sex"], categories=[Sex.FEMALE.value, Sex.MALE.value])
     df_to_predict = pd.get_dummies(df_passenger)
 
     res = model.predict(df_to_predict)
 
     return res.tolist()
+
