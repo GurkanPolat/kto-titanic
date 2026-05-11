@@ -8,8 +8,8 @@ COPY pyproject.toml uv.lock .python-version ./
 COPY ./src/titanic/api ./src/titanic/api
 
 RUN uv sync -n --group api
-RUN chmod -R 755 /app/.venv
+RUN chmod -R a+rx /app/.venv
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app/.venv/bin/api"]
+ENTRYPOINT ["/app/.venv/bin/python", "-m", "titanic.api"]
