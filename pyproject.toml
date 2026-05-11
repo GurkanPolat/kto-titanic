@@ -4,9 +4,9 @@ version = "0.1.0"
 description = "Kto Titanic Project"
 readme = "README.md"
 requires-python = ">=3.11"
+
 dependencies = [
     "fire>=0.7.1",
-    # TODO : Ajouter les dépendances transverses manquantes
     "pandas==2.3.3",
     "scikit-learn==1.8.0",
 ]
@@ -21,15 +21,24 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
+
 api = [
-    # TODO : Ajouter les dépendances manquantes pour l'API
+    "fastapi>=0.115.0",
+    "uvicorn>=0.37.0",
+    "PyJWT>=2.10.0",
+    "cryptography>=46.0.0",
+    "opentelemetry-api",
+    "opentelemetry-sdk",
+    "opentelemetry-instrumentation-fastapi",
+    "opentelemetry-exporter-otlp-proto-http",
 ]
+
 training = [
     "mlflow[extras]==3.8.1",
-    "setuptools==80.9.0", # for ydata-profiling dependency, bug with python 3.13
-    # TODO : Ajouter les dépendances manquantes pour l'entrainement
+    "setuptools==80.9.0",
     "ydata-profiling==4.18.0",
 ]
+
 chatbot = [
     "streamlit>=1.40.0",
     "langchain>=0.3.0",
@@ -38,11 +47,13 @@ chatbot = [
     "langchain-mcp-adapters>=0.2.1",
     "httpx>=0.28.0",
 ]
+
 mcp-server = [
     "uvicorn>=0.37.0",
     "fastmcp>=0.4.0",
     "httpx>=0.28.0",
 ]
+
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
