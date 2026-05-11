@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: titanic-api
-          image: quay.io/kto_gthomas/titanic/api:latest
+          image: quay.io/gurkan-plt/titanic/api:latest
           env:
             - name: JAEGER_ENDPOINT
               value: "http://jaeger.gurkan-plt-dev.svc.cluster.local:4318/v1/traces"
