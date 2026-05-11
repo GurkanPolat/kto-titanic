@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: titanic-api
   template:
-    metadata:
+    metadata: 
       labels:
         app: titanic-api
     spec:
