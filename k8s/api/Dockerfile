@@ -2,6 +2,8 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
+ENV PYTHONPATH=/app/src
+
 RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml uv.lock .python-version ./
