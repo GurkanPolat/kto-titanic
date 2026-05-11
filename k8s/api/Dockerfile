@@ -7,9 +7,10 @@ RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock .python-version ./
 COPY ./src/titanic/api ./src/titanic/api
 
+ENV UV_PROJECT_ENVIRONMENT=/usr/local
+
 RUN uv sync -n --group api
-RUN chmod -R a+rx /app/.venv
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app/.venv/bin/python", "-m", "titanic.api"]
+ENTRYPOINT ["python", "-m", "titanic.api"]
