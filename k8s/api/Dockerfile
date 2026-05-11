@@ -5,7 +5,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml uv.lock .python-version ./
-COPY ./src/titanic/api ./src/titanic/api
+COPY ./src ./src
 
 ENV UV_PROJECT_ENVIRONMENT=/tmp/kto-venv
 ENV PATH="/tmp/kto-venv/bin:$PATH"
