@@ -8,14 +8,16 @@ spec:
     matchLabels:
       app: titanic-api
   template:
-    metadata: 
+    metadata:
       labels:
         app: titanic-api
     spec:
       containers:
         - name: titanic-api
-          image: quay.io/gurkan-plt/titanic/api:latest
+          image: quay.io/kto_gthomas/titanic/api:latest
           env:
+            - name: JAEGER_ENDPOINT
+              value: "http://jaeger.gurkan-plt-dev.svc.cluster.local:4318/v1/traces"
             - name: OAUTH2_DOMAIN
               value: "PLACEHOLDER_OAUTH2_DOMAIN"
             - name: OAUTH2_JWT_AUDIENCE

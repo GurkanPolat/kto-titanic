@@ -1,61 +1,66 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: titanic-api
+  name: jaeger
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: titanic-api
+      app: jaeger
   template:
     metadata:
       labels:
-        app: titanic-api
+        app: jaeger
     spec:
       containers:
-        - name: titanic-api
-          image: quay.io/gurkan-plt/titanic/api:latest
-          env:
-            - name: JAEGER_ENDPOINT
-              value: "http://jaeger.gurkan-plt-dev.svc.cluster.local:4318/v1/traces"
-            - name: OAUTH2_DOMAIN
-              value: "PLACEHOLDER_OAUTH2_DOMAIN"
-            - name: OAUTH2_JWT_AUDIENCE
-              value: "titanic-api"
+        - name: jaeger
+          image: jaegertracing/all-in-one:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 16686  # UI
+              name: ui
+            - containerPort: 4317   # OTLP gRPC
+              name: otlp-grpc
+            - containerPort: 4318   # OTLP HTTP
+              name: otlp-http
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
           resources:
             limits:
-              memory: "1000Mi"
-              cpu: "200m"
-            requests:
               memory: "500Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
               cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: titanic-api-service
+  name: jaeger-service
 spec:
   selector:
-    app: titanic-api
+    app: jaeger
   ports:
-    - port: 8080
-      name: http-port
-      targetPort: 8080
+    - port: 16686
+      name: ui
+      targetPort: 16686
+    - port: 4317
+      name: otlp-grpc
+      targetPort: 4317
+    - port: 4318
+      name: otlp-http
+      targetPort: 4318
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: titanic-api
+  name: jaeger
 spec:
   to:
     kind: Service
-    name: titanic-api-service
-    weight: 100
+    name: jaeger-service
   port:
-    targetPort: http-port
+    targetPort: ui
   tls:
     termination: edge
-    insecureEdgeTerminationPolicy: None
-  wildcardPolicy: None
+    insecureEdgeTerminationPolicy: Redirect
