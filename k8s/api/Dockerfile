@@ -17,4 +17,4 @@ RUN chmod -R a+rx /tmp/kto-venv
 
 EXPOSE 8080
 
-ENTRYPOINT ["python", "-m", "titanic.api"]
+ENTRYPOINT ["api"]
